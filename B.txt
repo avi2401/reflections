@@ -1,0 +1,85 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node
+{
+	struct node *parent;
+	int data;
+	int rank;
+};
+
+/*void MakeSet(struct node *a)
+{
+	int i;
+	for(i=0;i<3;i++)
+	{
+		a[i].parent=&a[i];
+		a[i].rank=0;
+	}
+}*/
+
+void MakeSet(struct node *x)
+{
+	x->parent=x;
+	x->rank=0;
+}
+
+struct node* FindSet(struct node *x)
+{
+	if(x!=x->parent)
+		x->parent=FindSet(x->parent);
+
+	return x->parent;
+}
+
+UnionSet(struct node *x,struct node *y)
+{
+	if(x->rank>y->rank)
+		y->parent=x;
+	else
+	{
+		x->parent=y;
+		if(x->rank=y->rank)
+			y->rank=x->rank+1;
+	}
+}
+
+int main(void)
+{
+	int i;
+
+	struct node element[3];
+	printf("Storing the data for each element:- \n");
+	for(i=0;i<3;i++)
+	{
+		printf("Element no. %d- ",i+1);
+		scanf("%d",&element[i].data);
+	}
+
+	//MakeSet(element);
+	for(i=0;i<3;i++)
+	{
+		MakeSet(&element[i]);
+	}
+
+	/*for(i=0;i<3;i++)
+	{
+		printf("Element %d parent is %d\n",i+1,element[i].parent->data);
+	}*/
+	struct node *p;
+	for(i=0;i<3;i++)
+	{
+		p=FindSet(&element[i]);
+		printf("parent of node no. %d is %d\n",i+1,p->data);
+	}
+
+	printf("Union of node 2 & 3:-\n");
+	UnionSet(&element[1],&element[2]);
+	p=FindSet(&element[2]);
+	printf("parent of node no. 3 is %d\n",p->data);
+	p=FindSet(&element[1]);
+	printf("parent of node no. 2 is %d\n",p->data);
+	p=FindSet(&element[0]);
+	printf("parent of node no. 1 is %d\n",p->data);
+	return 0;
+}
